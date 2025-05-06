@@ -4,7 +4,7 @@ import { LiaTimesSolid } from "react-icons/lia";
 
 const Tasks = () => {
   const data = [
-    'Revisar facturas pendientes de Olímpica',
+    'Revisar facturas pendientes de Comiagro',
     'Validar registros en BMC',
     'Solicitar creación de códigos para productos nuevos',
     'Verificar excepciones DIAN pendientes'

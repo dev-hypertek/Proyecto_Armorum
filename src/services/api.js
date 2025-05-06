@@ -104,7 +104,7 @@ export const getLotesMock = () => {
       id: 1,
       nombreArchivo: 'facturas_comiagro_may2025.xlsx',
       fechaCarga: '2025-05-02T10:30:00',
-      cliente: 'Olímpica',
+      cliente: 'Comiagro',
       formato: 'comiagro',
       estado: 'Completado',
       registrosTotales: 120,

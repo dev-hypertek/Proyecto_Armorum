@@ -82,7 +82,7 @@ export const FacturasProvider = ({ children }) => {
         id: lotes.length + 1,
         nombreArchivo: archivo.name,
         fechaCarga: new Date().toISOString(),
-        cliente: clienteId === '1' ? 'Olímpica' : clienteId === '2' ? 'Cliente B' : 'Cliente C',
+        cliente: clienteId === '1' ? 'Comiagro' : clienteId === '2' ? 'Cliente B' : 'Cliente C',
         formato: formatoArchivo,
         estado: estadoInicial,
         registrosTotales: registrosTotales,

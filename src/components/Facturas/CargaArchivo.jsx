@@ -11,7 +11,7 @@ const CargaArchivo = () => {
   
   // Lista de clientes (esto vendría de una API en un caso real)
   const clientes = [
-    { id: 1, nombre: 'Olímpica' },
+    { id: 1, nombre: 'Comiagro' },
     { id: 2, nombre: 'Cliente B' },
     { id: 3, nombre: 'Cliente C' },
   ];
