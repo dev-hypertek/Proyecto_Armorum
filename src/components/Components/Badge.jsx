@@ -23,4 +23,4 @@ const Badge = () => {
           </div>)
 }
 
-export default Badge
+export default Badge //comentario
