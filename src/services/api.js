@@ -102,7 +102,7 @@ export const getLotesMock = () => {
   return [
     {
       id: 1,
-      nombreArchivo: 'facturas_olimpica_may2025.xlsx',
+      nombreArchivo: 'facturas_comiagro_may2025.xlsx',
       fechaCarga: '2025-05-02T10:30:00',
       cliente: 'Olímpica',
       formato: 'comiagro',
