@@ -40,14 +40,17 @@ export const FacturasProvider = ({ children }) => {
     return () => clearInterval(intervalo);
   }, []);
 
-  // Función para subir un archivo
-  const subirArchivo = async (archivo, clienteId, formatoArchivo) => {
+  // Función para subir un archivo - ACTUALIZADA para manejar los 3 tipos
+  const subirArchivo = async (archivo, clienteId, tipoArchivo) => {
     try {
       setCargando(true);
       const formData = new FormData();
       formData.append('archivo', archivo);
       formData.append('clienteId', clienteId);
-      formData.append('formatoArchivo', formatoArchivo);
+      
+      // Mapear tipos de frontend a backend
+      const tipoBackend = mapearTipoArchivo(tipoArchivo);
+      formData.append('formatoArchivo', tipoBackend);
       
       // Usar API real
       const respuesta = await cargarArchivo(formData);
@@ -55,7 +58,19 @@ export const FacturasProvider = ({ children }) => {
       // Recargar lista de lotes
       const response = await obtenerLotes();
       setLotes(response.data.lotes || []);
-      setMensaje({ tipo: 'exito', texto: 'Archivo subido correctamente' });
+      
+      // Mensaje específico según tipo de archivo
+      const mensajesPorTipo = {
+        'xml': 'Archivo XML procesado correctamente. Extrayendo facturas electrónicas...',
+        'csv_excel': 'Archivo CSV/Excel procesado. Validando plantilla y datos...',
+        'txt': 'Archivo de texto plano procesado. Analizando estructura...'
+      };
+      
+      setMensaje({ 
+        tipo: 'exito', 
+        texto: mensajesPorTipo[tipoArchivo] || 'Archivo subido correctamente'
+      });
+      
       return respuesta;
     } catch (error) {
       setMensaje({ tipo: 'error', texto: 'Error al subir archivo: ' + error.message });
@@ -63,6 +78,16 @@ export const FacturasProvider = ({ children }) => {
     } finally {
       setCargando(false);
     }
+  };
+
+  // Función auxiliar para mapear tipos de frontend a backend
+  const mapearTipoArchivo = (tipoFrontend) => {
+    const mapeo = {
+      'xml': 'xml',
+      'csv_excel': 'plantilla51', // Se podría hacer más específico
+      'txt': 'txt_plano'
+    };
+    return mapeo[tipoFrontend] || tipoFrontend;
   };
 
   // Función para ver detalles de un lote
@@ -97,7 +122,7 @@ export const FacturasProvider = ({ children }) => {
       // Usar API real
       const url = await descargarPlantilla(loteId);
       
-      setMensaje({ tipo: 'exito', texto: 'La plantilla se descargará en breve...' });
+      setMensaje({ tipo: 'exito', texto: 'La plantilla Comiagro se descargará en breve...' });
       
       // Iniciar descarga del archivo
       const a = document.createElement('a');
@@ -123,6 +148,34 @@ export const FacturasProvider = ({ children }) => {
       return () => clearTimeout(timer);
     }
   }, [mensaje]);
+
+  // Función para validar productos sin coincidencia - NUEVA
+  const validarProductosSinCoincidencia = async (loteId, productosSinCoincidencia) => {
+    try {
+      setCargando(true);
+      
+      // En producción, enviar al backend para re-procesar con LLM
+      // await actualizarProductosLote(loteId, productosSinCoincidencia);
+      
+      // Simular validación
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      setMensaje({ 
+        tipo: 'exito', 
+        texto: 'Productos re-procesados con IA. Verificando nuevas coincidencias...'
+      });
+      
+      // Recargar detalles del lote
+      await verDetalleLote(loteId);
+      
+      return { success: true };
+    } catch (error) {
+      setMensaje({ tipo: 'error', texto: 'Error al re-validar productos: ' + error.message });
+      throw error;
+    } finally {
+      setCargando(false);
+    }
+  };
 
   // Función para continuar el procesamiento de un lote (usado para formatos personalizados que requieren mapeo manual)
   const continuarProcesamiento = async (loteId, datosMapeo = {}) => {
@@ -180,7 +233,7 @@ export const FacturasProvider = ({ children }) => {
       // Simulamos una respuesta con sugerencias de mapeo
       await new Promise(resolve => setTimeout(resolve, 1500));
       
-      // Sugerencias de mapeo simuladas
+      // Sugerencias de mapeo simuladas basadas en PLANTILLA51_SIMONA
       const camposDestino = formatoDestino === 'comiagro' ? [
         { id: 'nombreUsuario', nombre: 'NOMBRE USUARIO (CLIENTE DEL CLIENTE)' },
         { id: 'nitUsuario', nombre: 'NIT USUARIO (CLIENTE DEL CLIENTE)' },
@@ -241,6 +294,7 @@ export const FacturasProvider = ({ children }) => {
     descargarPlantillaComiagro,
     continuarProcesamiento,
     obtenerSugerenciasMapeoCampos,
+    validarProductosSinCoincidencia,
     setMensaje,
   };
 

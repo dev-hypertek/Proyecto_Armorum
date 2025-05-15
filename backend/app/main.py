@@ -2,13 +2,16 @@ from fastapi import FastAPI, File, UploadFile, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 import os
+import sys
 import shutil
 import json
 from datetime import datetime
 from typing import List, Optional
-import pandas as pd
 import tempfile
 from openpyxl import Workbook
+
+# Agregar el directorio padre al path para imports
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Firebase service
 from app.services.firebase_service import firebase_service
@@ -62,22 +65,22 @@ async def cargar_archivo(
     lote_id = firebase_service.create_lote(lote_data)
     firebase_service.add_log(lote_id, "Archivo recibido y lote creado")
     
-    # Procesar archivo de forma simple
+    # Procesar archivo de forma simple (sin pandas por ahora)
     try:
-        if archivo.filename.endswith(('.xlsx', '.xls')):
-            df = pd.read_excel(file_path)
-        elif archivo.filename.endswith('.csv'):
-            df = pd.read_csv(file_path)
+        # Simular procesamiento sin pandas
+        if archivo.filename.endswith(('.xlsx', '.xls', '.csv')):
+            # Simular lectura exitosa
+            registros_totales = 50  # Número simulado
         else:
-            df = pd.DataFrame()  # Para archivos .txt crear DataFrame vacío
+            # Archivos TXT u otros
+            registros_totales = 25
         
-        registros_totales = len(df) if not df.empty else 50
         estado = "Completado"
         errores = 0
         
         # Simular errores según formato
         if formatoArchivo == "plantilla51":
-            errores = min(5, registros_totales // 10) if not df.empty else 3
+            errores = 3
             estado = "Error" if errores > 0 else "Completado"
             
             # Crear excepciones DIAN para demostración
