@@ -1,58 +1,43 @@
 import { useState, useContext, createContext } from "react";
 import { Link } from "react-router-dom";
-import { AiOutlineDashboard, AiOutlineTable } from "react-icons/ai";
+import { AiOutlineDashboard } from "react-icons/ai"; // AiOutlineTable ya no es necesaria
 import { MdArrowDropDown } from "react-icons/md";
-import { FaTableCells, FaRegKeyboard, FaBell, FaFont } from "react-icons/fa6";
-import { LiaFonticons } from "react-icons/lia";
-// import { PiHandPointingBold } from "react-icons/pi"; // Eliminado porque ya no se utiliza
+// FaTableCells, FaRegKeyboard, FaBell, FaFont, LiaFonticons ya no se importan
 import { RiFileList3Line } from "react-icons/ri";
 import { BsPersonVcardFill } from "react-icons/bs";
-import { FiMenu } from "react-icons/fi"; // Importamos un ícono para el toggle del sidebar
+import { FiMenu } from "react-icons/fi"; 
 
-// Importamos la imagen del proyecto
 import profileImg from "../images/da.png";
 
-// Creamos un contexto para controlar el estado del sidebar
 export const SidebarContext = createContext();
 
 export const Sidebar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { isCollapsed, setIsCollapsed } = useContext(SidebarContext);
 
-  // Definir todos los elementos del menú incluyendo los nuevos módulos
   const menuItems = [
     { icon: <AiOutlineDashboard />, label: "Dashboard", count: 5, path: "/", color: "#4d7cfe" },
-    // Menú items comentados - Elementos predeterminados del template
-    /*
-    { icon: <FaTableCells />, label: "Components", count: 14, path: "/components" },
-    { icon: <FaRegKeyboard />, label: "Forms", count: 50, path: "/forms" },
-    { icon: <AiOutlineTable />, label: "Tables", count: 6, path: "/tables" },
-    { icon: <FaBell />, label: "Notifications", count: 3, path: "/notifications", bgColor: "#59d05d", textColor: "white" },
-    { icon: <FaFont />, label: "Typography", count: 25, path: "/typography", bgColor: "#ff646d", textColor: "white" },
-    { icon: <LiaFonticons />, label: "Icons", count: 25, path: "/icons" },
-    */
-    // Nuevos módulos
-    { 
-      icon: <RiFileList3Line />, 
-      label: "Procesamiento Facturas", 
-      path: "/procesamiento-facturas", 
-      bgColor: "#4d7cfe", 
+    // El bloque de Menú items comentados será eliminado completamente
+    {
+      icon: <RiFileList3Line />,
+      label: "Procesamiento Facturas",
+      path: "/procesamiento-facturas",
+      bgColor: "#4d7cfe",
       textColor: "white",
-      highlight: true 
+      highlight: true
     },
-    { 
-      icon: <BsPersonVcardFill />, 
-      label: "Validación Terceros", 
-      path: "/validacion-terceros", 
-      bgColor: "#4d7cfe", 
+    {
+      icon: <BsPersonVcardFill />,
+      label: "Validación Terceros",
+      path: "/validacion-terceros",
+      bgColor: "#4d7cfe",
       textColor: "white",
-      highlight: true 
+      highlight: true
     },
   ];
 
   return (
     <div className={`z-50 fixed top-16 border shadow-md bg-white transition-all duration-300 ${isCollapsed ? 'w-20' : 'w-64'} h-screen`}>
-        {/* Botón de toggle para el sidebar */}
         <div className="flex justify-end p-2">
           <button 
             onClick={() => setIsCollapsed(!isCollapsed)}
@@ -62,7 +47,6 @@ export const Sidebar = () => {
           </button>
         </div>
       
-        {/* Profile Section */}
         {!isCollapsed && (
           <div className="flex items-center py-4 px-4 gap-3">
             <img
@@ -101,14 +85,12 @@ export const Sidebar = () => {
 
       <div className="border-b mt-1"></div>
 
-      {/* Sección de Armorum */}
       {!isCollapsed && (
         <div className="mt-4 px-4">
           <h3 className="text-xs font-bold text-gray-400 mb-2">MÓDULOS ARMORUM</h3>
         </div>
       )}
 
-      {/* Menu Items */}
       <div className="mt-1 text-sm font-medium text-gray-700">
         {menuItems.map((item, index) => (
           <Link to={item.path} key={index}>
@@ -140,8 +122,6 @@ export const Sidebar = () => {
             </div>
           </Link>
         ))}
-
-        {/* Botón de actualizar a pro eliminado */}
       </div>
     </div>
   );
