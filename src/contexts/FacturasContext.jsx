@@ -40,17 +40,28 @@ export const FacturasProvider = ({ children }) => {
     return () => clearInterval(intervalo);
   }, []);
 
-  // Función para subir un archivo - ACTUALIZADA para manejar los 3 tipos
-  const subirArchivo = async (archivo, clienteId, tipoArchivo) => {
+  // Función para subir un archivo - ACTUALIZADA para manejar detección automática
+  const subirArchivo = async (archivo, clienteId = 'auto', tipoArchivo = 'auto') => {
     try {
       setCargando(true);
       const formData = new FormData();
       formData.append('archivo', archivo);
-      formData.append('clienteId', clienteId);
       
-      // Mapear tipos de frontend a backend
-      const tipoBackend = mapearTipoArchivo(tipoArchivo);
-      formData.append('formatoArchivo', tipoBackend);
+      // Si es 'auto', dejar que el backend detecte automáticamente
+      if (clienteId === 'auto') {
+        // El backend determinará el cliente basado en el contenido
+        formData.append('clienteId', '1'); // Default, pero el backend puede sobrescribirlo
+      } else {
+        formData.append('clienteId', clienteId);
+      }
+      
+      if (tipoArchivo === 'auto') {
+        // El backend detectará automáticamente el tipo por extensión y contenido
+        formData.append('formatoArchivo', 'auto_detect');
+      } else {
+        const tipoBackend = mapearTipoArchivo(tipoArchivo);
+        formData.append('formatoArchivo', tipoBackend);
+      }
       
       // Usar API real
       const respuesta = await cargarArchivo(formData);
@@ -63,12 +74,13 @@ export const FacturasProvider = ({ children }) => {
       const mensajesPorTipo = {
         'xml': 'Archivo XML procesado correctamente. Extrayendo facturas electrónicas...',
         'csv_excel': 'Archivo CSV/Excel procesado. Validando plantilla y datos...',
-        'txt': 'Archivo de texto plano procesado. Analizando estructura...'
+        'txt': 'Archivo de texto plano procesado. Analizando estructura...',
+        'auto_detect': 'Archivo procesado automáticamente. Detectando formato y validando datos...'
       };
       
       setMensaje({ 
         tipo: 'exito', 
-        texto: mensajesPorTipo[tipoArchivo] || 'Archivo subido correctamente'
+        texto: mensajesPorTipo[tipoArchivo] || mensajesPorTipo['auto_detect']
       });
       
       return respuesta;

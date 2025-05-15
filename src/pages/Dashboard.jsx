@@ -1,9 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import Slider from '../components/Dashboard/Slider'
-import Balance from '../components/Dashboard/Balance'
 import Charts from '../components/Dashboard/Charts'
-import TableTaskContainer from '../components/Dashboard/TableTaskContainer'
 import { AiOutlineArrowDown, AiOutlineArrowUp } from 'react-icons/ai'
 import { RiFileList3Line } from 'react-icons/ri'
 import { BsPersonVcardFill } from 'react-icons/bs'
@@ -21,7 +18,7 @@ const Dashboard = () => {
   const lotesEnProceso = lotes.filter(lote => lote.estado === 'Procesando').length;
   
   const excepcionesPendientes = excepciones.filter(exc => 
-    ['No Encontrado', 'Inconsistente'].includes(exc.estadoValidacion)
+    ['No_Encontrado', 'Inconsistente'].includes(exc.estadoValidacion)
   ).length;
 
   // Tarjetas de estadísticas
@@ -83,12 +80,6 @@ const Dashboard = () => {
       {/* Gráficos y estadísticas */}
       <div className="px-6">
         <Charts />
-      </div>
-      
-      {/* Tabla de lotes recientes */}
-      <div className="px-6 mt-4">
-        <h2 className="font-semibold text-lg mb-2">Lotes Recientes</h2>
-        <TableTaskContainer />
       </div>
       
       {/* Accesos rápidos */}

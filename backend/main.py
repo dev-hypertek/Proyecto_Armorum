@@ -187,8 +187,24 @@ async def cargar_archivo(
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(archivo.file, buffer)
     
-    # Mapeo de clientes
+    # Mapeo de clientes (se puede expandir o hacer dinámico)
     cliente_nombres = {"1": "Comiagro", "2": "Olímpica", "3": "Cliente Regional"}
+    
+    # Detección automática de formato si es 'auto_detect'
+    if formatoArchivo == 'auto_detect':
+        # Detectar por extensión
+        extension = archivo.filename.lower().split('.')[-1]
+        if extension == 'xml':
+            formatoArchivo = 'xml'
+        elif extension in ['csv', 'xlsx', 'xls']:
+            formatoArchivo = 'csv_excel'
+        elif extension == 'txt':
+            formatoArchivo = 'txt_plano'
+        else:
+            formatoArchivo = 'csv_excel'  # Default
+    
+    # Auto-detectar cliente basado en contenido (simplified for MVP)
+    # En el futuro se puede implementar análisis del contenido para detectar cliente
     
     # Crear lote en Firestore
     lote_data = {
