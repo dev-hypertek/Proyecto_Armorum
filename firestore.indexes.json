@@ -1,0 +1,43 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "lotes",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "fechaCarga",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "excepciones_dian",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "loteId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "fechaDeteccion",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "logs",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "loteId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "timestamp",
+          "order": "ASCENDING"
+        }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}

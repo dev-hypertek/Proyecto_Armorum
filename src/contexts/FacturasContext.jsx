@@ -24,11 +24,9 @@ export const FacturasProvider = ({ children }) => {
     const cargarLotes = async () => {
       try {
         setCargando(true);
-        // En un entorno real, usaríamos esto:
-        // const data = await obtenerLotes();
-        // Por ahora, usamos datos mock:
-        const data = getLotesMock();
-        setLotes(data);
+        // Usar API real
+        const response = await obtenerLotes();
+        setLotes(response.data.lotes || []);
       } catch (error) {
         setMensaje({ tipo: 'error', texto: 'Error al cargar lotes: ' + error.message });
       } finally {
@@ -51,46 +49,12 @@ export const FacturasProvider = ({ children }) => {
       formData.append('clienteId', clienteId);
       formData.append('formatoArchivo', formatoArchivo);
       
-      // En un entorno real, usaríamos esto:
-      // const respuesta = await cargarArchivo(formData);
+      // Usar API real
+      const respuesta = await cargarArchivo(formData);
       
-      // Simulamos una respuesta exitosa
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Simulamos diferentes comportamientos según el formato
-      let registrosTotales = Math.floor(Math.random() * 100) + 20;
-      let errores = 0;
-      let estadoInicial = 'Procesando';
-      
-      // Para demostración, simulamos diferentes comportamientos según el formato
-      if (formatoArchivo === 'comiagro') {
-        // Simulamos que este formato es bien reconocido
-        registrosTotales = Math.floor(Math.random() * 50) + 30;
-        errores = Math.floor(Math.random() * 3); // Pocos errores
-      } else if (formatoArchivo === 'plantilla51') {
-        // Simulamos que este formato puede tener más errores
-        registrosTotales = Math.floor(Math.random() * 80) + 100;
-        errores = Math.floor(Math.random() * 10) + 5; // Más errores
-        if (errores > 8) estadoInicial = 'Error';
-      } else if (formatoArchivo === 'personalizado') {
-        // Simulamos que el formato personalizado requiere más validación
-        registrosTotales = Math.floor(Math.random() * 40) + 10;
-        errores = Math.floor(Math.random() * 5) + 1;
-      }
-      
-      const respuesta = {
-        id: lotes.length + 1,
-        nombreArchivo: archivo.name,
-        fechaCarga: new Date().toISOString(),
-        cliente: clienteId === '1' ? 'Comiagro' : clienteId === '2' ? 'Cliente B' : 'Cliente C',
-        formato: formatoArchivo,
-        estado: estadoInicial,
-        registrosTotales: registrosTotales,
-        errores: errores
-      };
-      
-      // Actualizar lista de lotes con el nuevo lote
-      setLotes(lotes => [respuesta, ...lotes]);
+      // Recargar lista de lotes
+      const response = await obtenerLotes();
+      setLotes(response.data.lotes || []);
       setMensaje({ tipo: 'exito', texto: 'Archivo subido correctamente' });
       return respuesta;
     } catch (error) {
@@ -105,11 +69,9 @@ export const FacturasProvider = ({ children }) => {
   const verDetalleLote = async (loteId) => {
     try {
       setCargando(true);
-      // En un entorno real, usaríamos esto:
-      // const detalle = await obtenerDetalleLote(loteId);
-      
-      // Por ahora, usamos datos mock:
-      const detalle = getDetalleLoteMock(loteId);
+      // Usar API real
+      const response = await obtenerDetalleLote(loteId);
+      const detalle = response.data;
       setLoteSeleccionado(detalle);
       
       // Si hay errores en el lote, actualizar el estado de errores
@@ -132,20 +94,18 @@ export const FacturasProvider = ({ children }) => {
   const descargarPlantillaComiagro = async (loteId) => {
     try {
       setCargando(true);
-      // En un entorno real, usaríamos esto:
-      // const url = await descargarPlantilla(loteId);
+      // Usar API real
+      const url = await descargarPlantilla(loteId);
       
-      // Simulamos la descarga
-      await new Promise(resolve => setTimeout(resolve, 1000));
       setMensaje({ tipo: 'exito', texto: 'La plantilla se descargará en breve...' });
       
-      // En un entorno real, esto iniciaría la descarga del archivo
-      // const a = document.createElement('a');
-      // a.href = url;
-      // a.download = `plantilla_comiagro_lote_${loteId}.xlsx`;
-      // document.body.appendChild(a);
-      // a.click();
-      // document.body.removeChild(a);
+      // Iniciar descarga del archivo
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `plantilla_comiagro_lote_${loteId}.xlsx`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
     } catch (error) {
       setMensaje({ tipo: 'error', texto: 'Error al descargar plantilla: ' + error.message });
       throw error;

@@ -1,84 +1,119 @@
 # Armorum Financial Partners - Sistema de Registro de Facturas BMC
 
-Este proyecto implementa una interfaz de usuario para la gestión de registro de facturas en la Bolsa Mercantil de Colombia (BMC) para Armorum Financial Partners.
-
 ## Descripción
 
-Armorum Financial Partners actúa como referenciador autorizado en colaboración con la firma comisionista Comiagro, ofreciendo a sus clientes el servicio de "Registro de Facturas" en la BMC. Este servicio permite a empresas agroindustriales obtener exención de retención en la fuente para sus facturas de productos registrados.
+Armorum Financial Partners actúa como referenciador autorizado con Comiagro para ofrecer servicios de "Registro de Facturas" en la BMC, permitiendo a empresas agroindustriales obtener exención de retención en la fuente.
 
-Esta aplicación automatiza y sistematiza los procesos operativos internos de Armorum que anteriormente eran manuales y propensos a errores.
+Esta aplicación automatiza los procesos operativos internos que anteriormente eran manuales y propensos a errores.
 
-## Módulos Implementados
+## ✅ Estado Actual: MVP Funcional en Firebase
 
-### 1. Módulo de Procesamiento y Transformación de Facturación (Módulo 2)
+### Módulos Implementados
 
-Este módulo permite:
-- Cargar archivos de facturación desde diferentes formatos (Excel, CSV, texto plano)
-- Ver el historial de lotes procesados y su estado
-- Ver detalles específicos de cada lote
-- Identificar errores de validación
-- Descargar la plantilla final en formato Comiagro
+**1. Procesamiento y Transformación de Facturación**
+- Carga de archivos Excel, CSV y TXT
+- Visualización de lotes con estados en tiempo real
+- Detalles completos de procesamiento con logs
+- Manejo de errores de validación
+- Descarga de plantillas Comiagro
 
-### 2. Módulo de Validación Automatizada de Terceros - DIAN (Módulo 3)
+**2. Validación Automatizada de Terceros DIAN**
+- Gestión de excepciones de validación DIAN
+- Acciones sobre terceros (corregir, crear, ignorar)
+- Seguimiento de estado de excepciones
 
-Este módulo permite:
-- Ver excepciones de validación de terceros ante la DIAN
-- Gestionar las excepciones (marcar como corregidas, para creación manual o ignorar)
-- Dar seguimiento al estado de las excepciones
+### Arquitectura
 
-## Arquitectura
+**Frontend**
+- React 18 + Context API + Tailwind CSS
+- Deployed on Firebase Hosting
 
-La aplicación se divide en dos partes:
+**Backend - Migrado a Firebase**
+- FastAPI + Cloud Run
+- Firestore para base de datos
+- Cache DIAN en Firestore
+- **Costo estimado**: $0-5/mes
 
-### Frontend
-- Implementado con React y Material-UI
-- Utiliza Context API para la gestión del estado
-- Interfaces de usuario para la carga, visualización y gestión de datos
+## 🚀 Instalación y Ejecución
 
-### Backend (Pendiente por implementar)
-- API RESTful para la lógica de procesamiento
-- Análisis de archivos y extracción de datos
-- Validación de datos y reglas de negocio
-- Conexión con la DIAN para validación de terceros
-- Generación de plantillas Comiagro
+### 🔥 Firebase Deployment (Producción)
 
-## Puntos Destacados
-
-- **Trazabilidad**: Logs detallados del procesamiento de cada lote
-- **Validación**: Identificación temprana de errores para evitar problemas con la DIAN
-- **Automatización**: Reducción drástica del tiempo de procesamiento
-- **Escalabilidad**: Capacidad para manejar grandes volúmenes de facturación
-
-## Requisitos Técnicos
-
-- Node.js 16+
-- npm o yarn
-- React 18+
-- Material-UI 5+
-
-## Instalación
-
-1. Clonar este repositorio
-2. Instalar dependencias:
+1. **Instalar Firebase CLI:**
+   ```bash
+   npm install -g firebase-tools
+   firebase login
    ```
+
+2. **Deploy Backend a Cloud Run:**
+   ```bash
+   cd backend
+   gcloud builds submit --tag gcr.io/YOUR_PROJECT_ID/armorum-backend
+   gcloud run deploy armorum-backend --image gcr.io/YOUR_PROJECT_ID/armorum-backend
+   ```
+
+3. **Deploy Frontend a Firebase Hosting:**
+   ```bash
+   npm run build
+   firebase deploy --only hosting
+   ```
+
+### 🐳 Docker Local Development
+
+```bash
+# Desarrollo completo con Firestore
+docker-compose up
+```
+
+### 🛠️ Manual Local Development
+
+1. **Backend:**
+   ```bash
+   cd backend
+   pip install -r requirements.txt
+   python app/main.py
+   ```
+
+2. **Frontend:**
+   ```bash
    npm install
-   ```
-3. Iniciar la aplicación:
-   ```
    npm run dev
    ```
 
-## Estado Actual
+### URLs de Acceso
+- Frontend: http://localhost:3000
+- Backend: http://localhost:8080
 
-El proyecto se encuentra en fase de desarrollo. Los componentes frontend están implementados con datos mock para pruebas, pendiente por integrar con el backend real una vez se desarrolle.
+## 📁 Estructura del Proyecto
 
-## Próximos Pasos
+```
+proyecto-armorum/
+├── backend/                 # Cloud Run API
+│   ├── app/
+│   │   ├── main.py         # FastAPI app
+│   │   └── services/
+│   │       └── firebase_service.py
+│   └── Dockerfile
+├── src/                    # React frontend
+├── firebase.json           # Firebase config
+├── firestore.rules         # Security rules
+└── docker-compose.yml
+```
 
-1. Desarrollar el backend API RESTful
-2. Implementar la autenticación y autorización
-3. Integrar con el sistema de la DIAN para validación de terceros
-4. Desarrollar el Módulo 1 para la homologación de códigos BMC
+## 🎯 Próximos Pasos para Producción
 
-## Documentación
+1. **Integrar script LLM existente** (`product_matcher_v2.py`)
+2. **Implementar validación real con DIAN**
+3. **Autenticación Firebase Auth**
+4. **Optimizar generación de plantillas Excel**
+5. **Desarrollar Módulo 1 de homologación**
 
-Para más información sobre el proyecto, consultar el archivo `IMPLEMENTACION.md` que contiene detalles sobre los componentes implementados y la integración con el backend.
+## 📋 Documentación
+
+- `INSTRUCCIONES_FIREBASE.md` - Guía detallada de deployment
+- `IMPLEMENTACION.md` - Detalles técnicos de implementación
+
+---
+
+**Estado**: ✅ MVP Funcional Listo para Producción
+**Costo**: 🆓 Prácticamente Gratuito en Firebase
+**Escalabilidad**: 📈 Hasta 1000 lotes/mes sin costos

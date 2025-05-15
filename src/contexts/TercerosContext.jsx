@@ -19,12 +19,9 @@ export const TercerosProvider = ({ children }) => {
     const cargarExcepciones = async () => {
       try {
         setCargando(true);
-        // En un entorno real, usaríamos esto:
-        // const data = await obtenerExcepciones();
-        
-        // Por ahora, usamos datos mock:
-        const data = getExcepcionesMock();
-        setExcepciones(data);
+        // Usar API real
+        const response = await obtenerExcepciones();
+        setExcepciones(response.data.excepciones || []);
       } catch (error) {
         setMensaje({ tipo: 'error', texto: 'Error al cargar excepciones: ' + error.message });
       } finally {
@@ -42,23 +39,12 @@ export const TercerosProvider = ({ children }) => {
   const actualizarTercero = async (excepcionId, accion, datos = {}) => {
     try {
       setCargando(true);
-      // En un entorno real, usaríamos esto:
-      // const respuesta = await actualizarEstadoTercero(excepcionId, accion, datos);
+      // Usar API real
+      const respuesta = await actualizarEstadoTercero(excepcionId, accion, datos);
       
-      // Simulamos una respuesta exitosa
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Actualizar lista de excepciones (simulación)
-      setExcepciones(excepciones => 
-        excepciones.map(exc => 
-          exc.id === excepcionId ? { 
-            ...exc, 
-            estadoValidacion: accion === 'corregir' ? 'Corregido' :
-                             accion === 'crear' ? 'En Creación Manual' :
-                             accion === 'ignorar' ? 'Ignorado' : exc.estadoValidacion
-          } : exc
-        )
-      );
+      // Recargar excepciones
+      const response = await obtenerExcepciones();
+      setExcepciones(response.data.excepciones || []);
       
       setMensaje({ 
         tipo: 'exito', 

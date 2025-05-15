@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./backend:/app
+      - backend_uploads:/app/uploads
+    environment:
+      - ENV=development
+      - PORT=8080
+      - FIREBASE_PROJECT_ID=armorum-project
+    networks:
+      - armorum_network
+
+  frontend:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - REACT_APP_API_URL=http://localhost:8080
+    depends_on:
+      - backend
+    networks:
+      - armorum_network
+
+volumes:
+  backend_uploads:
+
+networks:
+  armorum_network:
+    driver: bridge

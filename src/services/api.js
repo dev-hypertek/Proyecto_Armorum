@@ -1,6 +1,6 @@
 // src/services/api.js
-// URL base de la API (se podría configurar por entorno)
-const API_URL = 'http://localhost:3000/api'; 
+// URL base de la API - Environment variable or default to localhost
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080/api'; 
 
 // Función auxiliar para manejar errores de la API
 const handleResponse = async (response) => {
