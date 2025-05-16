@@ -21,5 +21,5 @@ COPY . .
 # Exponer puerto 8080 (requerido por Cloud Run)
 EXPOSE 8080
 
-# Comando optimizado para Cloud Run
-CMD exec uvicorn app.main:app --host 0.0.0.0 --port ${PORT}
+# Comando correcto para Cloud Run - main.py contiene la app FastAPI
+CMD exec uvicorn main:app --host 0.0.0.0 --port ${PORT}

@@ -1,119 +1,192 @@
-# Armorum Financial Partners - Sistema de Registro de Facturas BMC
+# 📚 Generador de Datos de Prueba - Sistema Armorum
 
-## Descripción
+## 🎯 Descripción
 
-Armorum Financial Partners actúa como referenciador autorizado con Comiagro para ofrecer servicios de "Registro de Facturas" en la BMC, permitiendo a empresas agroindustriales obtener exención de retención en la fuente.
+Este script genera datos de prueba realistas para el sistema Armorum, incluyendo:
+- Catálogo de productos BMC
+- Base de datos de terceros
+- Facturas en múltiples formatos (CSV, XML, TXT)
+- Escenarios específicos de testing
+- Validaciones DIAN simuladas
 
-Esta aplicación automatiza los procesos operativos internos que anteriormente eran manuales y propensos a errores.
+## 🚀 Instalación
 
-## ✅ Estado Actual: MVP Funcional en Firebase
-
-### Módulos Implementados
-
-**1. Procesamiento y Transformación de Facturación**
-- Carga de archivos Excel, CSV y TXT
-- Visualización de lotes con estados en tiempo real
-- Detalles completos de procesamiento con logs
-- Manejo de errores de validación
-- Descarga de plantillas Comiagro
-
-**2. Validación Automatizada de Terceros DIAN**
-- Gestión de excepciones de validación DIAN
-- Acciones sobre terceros (corregir, crear, ignorar)
-- Seguimiento de estado de excepciones
-
-### Arquitectura
-
-**Frontend**
-- React 18 + Context API + Tailwind CSS
-- Deployed on Firebase Hosting
-
-**Backend - Migrado a Firebase**
-- FastAPI + Cloud Run
-- Firestore para base de datos
-- Cache DIAN en Firestore
-- **Costo estimado**: $0-5/mes
-
-## 🚀 Instalación y Ejecución
-
-### 🔥 Firebase Deployment (Producción)
-
-1. **Instalar Firebase CLI:**
-   ```bash
-   npm install -g firebase-tools
-   firebase login
-   ```
-
-2. **Deploy Backend a Cloud Run:**
-   ```bash
-   cd backend
-   gcloud builds submit --tag gcr.io/YOUR_PROJECT_ID/armorum-backend
-   gcloud run deploy armorum-backend --image gcr.io/YOUR_PROJECT_ID/armorum-backend
-   ```
-
-3. **Deploy Frontend a Firebase Hosting:**
-   ```bash
-   npm run build
-   firebase deploy --only hosting
-   ```
-
-### 🐳 Docker Local Development
-
+### Requisitos
 ```bash
-# Desarrollo completo con Firestore
-docker-compose up
+pip install pandas faker openpyxl sqlite3
 ```
 
-### 🛠️ Manual Local Development
-
-1. **Backend:**
-   ```bash
-   cd backend
-   pip install -r requirements.txt
-   python app/main.py
-   ```
-
-2. **Frontend:**
-   ```bash
-   npm install
-   npm run dev
-   ```
-
-### URLs de Acceso
-- Frontend: http://localhost:3000
-- Backend: http://localhost:8080
-
-## 📁 Estructura del Proyecto
-
-```
-proyecto-armorum/
-├── backend/                 # Cloud Run API
-│   ├── app/
-│   │   ├── main.py         # FastAPI app
-│   │   └── services/
-│   │       └── firebase_service.py
-│   └── Dockerfile
-├── src/                    # React frontend
-├── firebase.json           # Firebase config
-├── firestore.rules         # Security rules
-└── docker-compose.yml
+### Ejecución Rápida
+```bash
+python generate_test_data.py
 ```
 
-## 🎯 Próximos Pasos para Producción
+## 📁 Archivos Generados
 
-1. **Integrar script LLM existente** (`product_matcher_v2.py`)
-2. **Implementar validación real con DIAN**
-3. **Autenticación Firebase Auth**
-4. **Optimizar generación de plantillas Excel**
-5. **Desarrollar Módulo 1 de homologación**
+### Archivos Maestros
+- `productos_bmc.csv` - Catálogo completo de productos BMC
+- `terceros.csv` - Base de datos de terceros validados 
+- `formas_pago.csv` - Códigos de formas de pago
 
-## 📋 Documentación
+### Facturas de Prueba
+- `facturas_olimpica_test.csv` - 50 facturas estilo Olímpica
+- `facturas_cliente_regional.csv` - 30 facturas cliente regional
+- `facturas_comiagro_test.csv` - 40 facturas Comiagro
+- `facturas_dian_test.xml` - 20 facturas formato XML DIAN
+- `facturas_plano_test.txt` - 25 facturas formato texto plano
 
-- `INSTRUCCIONES_FIREBASE.md` - Guía detallada de deployment
-- `IMPLEMENTACION.md` - Detalles técnicos de implementación
+### Escenarios de Testing
+- `escenario_exitoso.csv` - 100% homologación exitosa
+- `escenario_advertencias.csv` - Productos que requieren revisión
+- `escenario_errores.csv` - Productos sin homologar
 
----
+### Base de Datos
+- `armorum_test.db` - SQLite con todos los datos estructurados
+- `terceros_dian_validation.json` - Respuestas simuladas de DIAN
 
-**Estado**: ✅ MVP Funcional Listo para Producción
-**Costo**: 🆓 Prácticamente Gratuito en Firebase
-**Escalabilidad**: 📈 Hasta 1000 lotes/mes sin costos
+## 🔧 Uso Avanzado
+
+### Generar Solo Facturas CSV
+```python
+from generate_test_data import ArmorumDataGenerator
+
+generator = ArmorumDataGenerator()
+generator.load_bmc_catalog()
+generator.load_terceros()
+generator.generate_facturas_csv(100, 'mi_archivo.csv')
+generator.close()
+```
+
+### Crear Escenarios Personalizados
+```python
+generator = ArmorumDataGenerator()
+generator.load_bmc_catalog()
+generator.load_terceros()
+generator.create_test_scenarios()
+generator.close()
+```
+
+### Simular Validación DIAN
+```python
+generator = ArmorumDataGenerator()
+generator.load_terceros()
+generator.generate_dian_validation_data('validaciones.json')
+generator.close()
+```
+
+## 📊 Datos Incluidos
+
+### Productos BMC (38 productos)
+- **Familia AREPA:** 6 variaciones (amarilla, blanca, con queso, etc.)
+- **Familia LECHUGA:** 5 tipos (romana, morada, batavia, etc.)
+- **Productos NUEVOS:** Insumos veterinarios, alimentos balanceados
+- **Productos PROBLEMA:** Para testing de IA
+
+### Terceros (12 empresas)
+- **Activos:** PANADERIA EL RETOÑO, ROSAMINA, CENOSUD, EXITO
+- **Vendedores:** AREPAS PAISAS, PRODUCTOS AGRÍCOLAS
+- **Estados especiales:** Inactivos, pendientes validación
+
+### Formas de Pago (18 códigos)
+- Contado inmediato (1)
+- Plazos estándar (15, 30, 60, 90 días)
+- Códigos especiales (contra entrega, personalizado)
+
+## 🧪 Testing del Sistema
+
+### Flujo Completo de Prueba
+
+1. **Cargar facturas:** Usar archivos CSV generados
+2. **Procesar IA:** Verificar homologación automática  
+3. **Validar terceros:** Comprobar consultas DIAN simuladas
+4. **Generar Simona:** Crear plantilla final
+
+### Casos de Prueba Específicos
+
+**✅ Exitoso (escenario_exitoso.csv):**
+- Todos los productos tienen match > 90%
+- Terceros válidos en DIAN
+- Genera plantilla Simona completa
+
+**⚠️ Advertencias (escenario_advertencias.csv):**
+- 80% productos homologados
+- 20% requieren revisión manual
+- Algunos errores ortográficos
+
+**❌ Errores (escenario_errores.csv):**
+- 40% productos sin código BMC
+- Nombres de productos muy específicos
+- Requiere creación manual
+
+## 🔍 Validación de Datos
+
+### Verificar Productos BMC
+```sql
+SELECT categoria, COUNT(*) 
+FROM productos_bmc 
+GROUP BY categoria
+ORDER BY COUNT(*) DESC;
+```
+
+### Verificar Terceros
+```sql
+SELECT estado_dian, COUNT(*) 
+FROM terceros 
+GROUP BY estado_dian;
+```
+
+### Verificar Facturas
+```sql
+SELECT tipo_archivo, COUNT(*) 
+FROM lotes_facturas 
+GROUP BY tipo_archivo;
+```
+
+## 📈 Monitoreo y Estadísticas
+
+El script genera estadísticas automáticas:
+- Total de productos BMC cargados
+- Terceros por estado DIAN
+- Facturas por formato
+- Escenarios de prueba creados
+
+## 🛠️ Personalización
+
+### Agregar Nuevos Productos
+Editar `create_productos_bmc_file()` para incluir productos específicos de tu industria.
+
+### Modificar Terceros
+Actualizar `create_terceros_file()` con empresas reales de tu base de datos.
+
+### Ajustar Facturas
+Cambiar rangos de precios, cantidades y fechas en `get_productos_frecuentes()`.
+
+## 📞 Soporte
+
+Para dudas sobre la implementación:
+1. Revisar logs de ejecución
+2. Verificar archivos CSV generados
+3. Consultar base de datos SQLite
+4. Contactar al equipo de desarrollo
+
+## 🔄 Actualización de Datos
+
+Para mantener los datos actualizados:
+1. Ejecutar el script mensualmente
+2. Actualizar catálogo BMC con correos recibidos
+3. Sincronizar terceros con validaciones DIAN reales
+4. Ajustar precios según inflación
+
+## ⚡ Optimización
+
+Para archivos grandes (>1000 facturas):
+- Usar `generate_facturas_csv()` con chunks
+- Generar en lotes separados por cliente
+- Procesar XML/TXT en paralelo
+
+## 🎯 Próximos Pasos
+
+1. Integrar con sistema real de Armorum
+2. Conectar script con backend FastAPI
+3. Automatizar con cronjob para actualizaciones
+4. Crear dashboard de monitoreo
