@@ -2,42 +2,43 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Sidebar, { SidebarContext } from "./components/Sidebar";
 import Dashboard from "./pages/Dashboard";
-// Component, Forms, Tables, Notifications, Typography, Icons, Footer ya no se importan
 import { useState } from "react";
 
-// Importar los nuevos componentes de módulos
+// Importar los módulos específicos de Armorum
 import ProcesamientoFacturas from "./pages/facturas/ProcesamientoFacturas";
 import ValidacionTerceros from "./pages/terceros/ValidacionTerceros";
+import HomologacionProductos from "./pages/productos/HomologacionProductos";
 
 // Importar providers de contexto
 import { FacturasProvider } from "./contexts/FacturasContext";
 import { TercerosProvider } from "./contexts/TercerosContext";
+import { ProductosProvider } from "./contexts/ProductosContext";
 
 const App = () => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   
   return (
     <Router>
-      {/* Agregar providers para los contextos */}
       <FacturasProvider>
         <TercerosProvider>
-          <SidebarContext.Provider value={{ isCollapsed: isSidebarCollapsed, setIsCollapsed: setIsSidebarCollapsed }}>
-            <Navbar />
-            <Sidebar />
-            <div className={`transition-all duration-300 ${isSidebarCollapsed ? 'ml-20' : 'ml-64'} pt-16`}>
-              <Routes>
-                <Route path="/" element={<Dashboard />} />
-                {/* Rutas eliminadas para /components, /forms, /tables, /notifications, /typography, /icons */}
-                
-                {/* Agregar las nuevas rutas */}
-                <Route path="/procesamiento-facturas" element={<ProcesamientoFacturas />} />
-                <Route path="/validacion-terceros" element={<ValidacionTerceros />} />
-              </Routes>
-              {/* <Footer/> ya estaba comentado, lo mantendremos así o lo eliminaremos si el import se quita */}
+          <ProductosProvider>
+            <SidebarContext.Provider value={{ isCollapsed: isSidebarCollapsed, setIsCollapsed: setIsSidebarCollapsed }}>
+            <div className="min-h-screen bg-gray-50">
+              <Navbar />
+              <Sidebar />
+              <div className={`transition-all duration-300 ${isSidebarCollapsed ? 'ml-20' : 'ml-64'} pt-16`}>
+                <Routes>
+                  <Route path="/" element={<Dashboard />} />
+                  <Route path="/procesamiento-facturas" element={<ProcesamientoFacturas />} />
+                  <Route path="/validacion-terceros" element={<ValidacionTerceros />} />
+                  <Route path="/homologacion-productos" element={<HomologacionProductos />} />
+                </Routes>
+              </div>
             </div>
           </SidebarContext.Provider>
-        </TercerosProvider>
-      </FacturasProvider>
+            </ProductosProvider>
+            </TercerosProvider>
+            </FacturasProvider>
     </Router>
   );
 };

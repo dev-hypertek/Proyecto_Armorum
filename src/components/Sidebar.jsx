@@ -1,9 +1,10 @@
 import { useState, useContext, createContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { AiOutlineDashboard } from "react-icons/ai";
 import { MdArrowDropDown } from "react-icons/md";
 import { RiFileList3Line } from "react-icons/ri";
 import { BsPersonVcardFill } from "react-icons/bs";
+import { BiNetworkChart } from "react-icons/bi";
 import { FiMenu } from "react-icons/fi"; 
 
 import profileImg from "../images/da.png";
@@ -13,29 +14,28 @@ export const SidebarContext = createContext();
 export const Sidebar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { isCollapsed, setIsCollapsed } = useContext(SidebarContext);
+  const location = useLocation();
 
   const menuItems = [
     { 
       icon: <AiOutlineDashboard />, 
       label: "Dashboard", 
-      path: "/", 
-      color: "#6366f1" 
+      path: "/"
     },
     {
       icon: <RiFileList3Line />,
       label: "Procesamiento Facturas",
-      path: "/procesamiento-facturas",
-      bgColor: "#6366f1",
-      textColor: "white",
-      highlight: true
+      path: "/procesamiento-facturas"
     },
     {
       icon: <BsPersonVcardFill />,
       label: "Validación Terceros",
-      path: "/validacion-terceros",
-      bgColor: "#6366f1",
-      textColor: "white",
-      highlight: true
+      path: "/validacion-terceros"
+    },
+    {
+      icon: <BiNetworkChart />,
+      label: "Homologación Productos",
+      path: "/homologacion-productos"
     },
   ];
 
@@ -87,27 +87,31 @@ export const Sidebar = () => {
       )}
 
       <div className="mt-1 text-sm font-medium text-gray-700">
-        {menuItems.map((item, index) => (
-          <Link to={item.path} key={index}>
-            <div
-              className={`
-                hover:border-l-4 py-3 my-1 
-                ${item.highlight ? 'border-l-4 border-indigo-500 bg-indigo-50' : 'hover:border-indigo-500'} 
-                flex items-center justify-between hover:bg-gray-50 cursor-pointer
-                ${isCollapsed ? 'px-0' : 'px-4'}
-              `}
-            >
-              <div className={`flex items-center ${isCollapsed ? 'justify-center w-full' : 'gap-3'}`}>
-                <div className={`text-xl ${item.color ? `text-indigo-500` : item.highlight ? "text-indigo-500" : "text-gray-400"}`}>
-                  {item.icon}
+        {menuItems.map((item, index) => {
+          const isActive = location.pathname === item.path;
+          
+          return (
+            <Link to={item.path} key={index}>
+              <div
+                className={`
+                  hover:border-l-4 py-3 my-1 
+                  ${isActive ? 'border-l-4 border-indigo-500 bg-indigo-50' : 'hover:border-indigo-500'} 
+                  flex items-center justify-between hover:bg-gray-50 cursor-pointer
+                  ${isCollapsed ? 'px-0' : 'px-4'}
+                `}
+              >
+                <div className={`flex items-center ${isCollapsed ? 'justify-center w-full' : 'gap-3'}`}>
+                  <div className={`text-xl ${isActive ? "text-indigo-500" : "text-gray-400"}`}>
+                    {item.icon}
+                  </div>
+                  {!isCollapsed && (
+                    <div className={isActive ? "text-indigo-600 font-medium" : "text-gray-700"}>{item.label}</div>
+                  )}
                 </div>
-                {!isCollapsed && (
-                  <div className={item.highlight ? "text-indigo-600 font-medium" : ""}>{item.label}</div>
-                )}
               </div>
-            </div>
-          </Link>
-        ))}
+            </Link>
+          );
+        })}
       </div>
     </div>
   );

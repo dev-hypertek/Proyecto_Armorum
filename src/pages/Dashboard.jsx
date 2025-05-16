@@ -1,7 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import Charts from '../components/Dashboard/Charts'
-import { AiOutlineArrowDown, AiOutlineArrowUp } from 'react-icons/ai'
 import { RiFileList3Line } from 'react-icons/ri'
 import { BsPersonVcardFill } from 'react-icons/bs'
 import { useFacturas } from '../contexts/FacturasContext'
@@ -26,85 +25,134 @@ const Dashboard = () => {
     {
       title: "Lotes Procesados",
       value: totalLotes,
-      change: lotesCompletados > 0 ? Math.round((lotesCompletados/totalLotes) * 100) : 0,
-      changeText: "Completados",
-      isPositive: true
+      subtitle: `${lotesCompletados} completados`,
+      icon: (
+        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+      ),
+      color: "blue",
+      bgColor: "bg-blue-50",
+      iconColor: "text-blue-600"
     },
     {
       title: "Excepciones DIAN",
       value: excepciones.length,
-      change: excepcionesPendientes,
-      changeText: "Pendientes",
-      isPositive: false
+      subtitle: `${excepcionesPendientes} pendientes`,
+      icon: (
+        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      ),
+      color: "yellow",
+      bgColor: "bg-yellow-50",
+      iconColor: "text-yellow-600"
     },
     {
-      title: "Errores",
+      title: "Con Errores",
       value: lotesConError,
-      change: lotesConError > 0 ? Math.round((lotesConError/totalLotes) * 100) : 0,
-      changeText: "De los lotes",
-      isPositive: false
+      subtitle: "Requieren revisión",
+      icon: (
+        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      ),
+      color: "red",
+      bgColor: "bg-red-50",
+      iconColor: "text-red-600"
     },
     {
       title: "En Procesamiento",
       value: lotesEnProceso,
-      change: lotesEnProceso > 0 ? Math.round((lotesEnProceso/totalLotes) * 100) : 0,
-      changeText: "En progreso",
-      isWarning: true
+      subtitle: "Activos ahora",
+      icon: (
+        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+        </svg>
+      ),
+      color: "green",
+      bgColor: "bg-green-50",
+      iconColor: "text-green-600"
     }
   ];
 
   return (
-    <div className="mt-4 p-4">
-      <div className="px-6 mb-6">
-        <h1 className="font-semibold text-2xl">Dashboard Armorum</h1>
-        <p className="text-gray-500 text-sm">Plataforma de Registro de Facturas BMC</p>
-      </div>
-      
-      {/* Tarjetas de estadísticas */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 px-6">
-        {statCards.map((card, index) => (
-          <div key={index} className="bg-white p-4 rounded-lg shadow-sm border">
-            <div className="text-sm text-gray-400">{card.title}</div>
-            <div className="text-2xl font-medium">{card.value}</div>
-            <div className="flex gap-1 text-xs">
-              <div className={`flex items-center ${card.isPositive ? 'text-green-500' : card.isWarning ? 'text-yellow-500' : 'text-red-500'}`}>
-                {card.isPositive ? <AiOutlineArrowUp /> : card.isWarning ? '⏱️' : <AiOutlineArrowDown />}
-                <span>{card.change}{typeof card.change === 'number' && card.change > 0 && '%'}</span>
-              </div>
-              <div className="text-gray-400">{card.changeText}</div>
-            </div>
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <div className="bg-white shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="text-center">
+            <h1 className="text-4xl font-bold text-gray-900 mb-3">
+              Dashboard Armorum
+            </h1>
+            <p className="text-xl text-gray-600">
+              Plataforma de Registro de Facturas BMC
+            </p>
           </div>
-        ))}
+        </div>
       </div>
       
-      {/* Gráficos y estadísticas */}
-      <div className="px-6">
-        <Charts />
-      </div>
-      
-      {/* Accesos rápidos */}
-      <div className="mt-8 px-6">
-        <h2 className="text-lg font-semibold mb-4">Accesos Rápidos</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Link to="/procesamiento-facturas" className="flex items-center p-4 bg-white rounded-lg border shadow-sm hover:shadow-md transition-shadow">
-            <div className="bg-blue-100 p-3 rounded-full mr-4">
-              <RiFileList3Line className="text-blue-600 text-xl" />
+      {/* Stats Cards */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          {statCards.map((card, index) => (
+            <div key={index} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">{card.title}</p>
+                  <p className="text-3xl font-bold text-gray-900 mt-2">{card.value}</p>
+                  <p className="text-sm text-gray-500 mt-1">{card.subtitle}</p>
+                </div>
+                <div className={`${card.bgColor} p-3 rounded-full`}>
+                  <div className={card.iconColor}>
+                    {card.icon}
+                  </div>
+                </div>
+              </div>
             </div>
-            <div>
-              <h3 className="font-medium">Procesamiento de Facturas</h3>
-              <p className="text-sm text-gray-500">Cargue y procese facturas para el registro BMC</p>
-            </div>
-          </Link>
-          
-          <Link to="/validacion-terceros" className="flex items-center p-4 bg-white rounded-lg border shadow-sm hover:shadow-md transition-shadow">
-            <div className="bg-blue-100 p-3 rounded-full mr-4">
-              <BsPersonVcardFill className="text-blue-600 text-xl" />
-            </div>
-            <div>
-              <h3 className="font-medium">Validación de Terceros</h3>
-              <p className="text-sm text-gray-500">Gestione excepciones de validación DIAN</p>
-            </div>
-          </Link>
+          ))}
+        </div>
+        
+        {/* Charts */}
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">Tendencias de Procesamiento</h2>
+          <Charts />
+        </div>
+        
+        {/* Quick Actions */}
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <h2 className="text-lg font-semibold text-gray-900 mb-6">Acciones Rápidas</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Link 
+              to="/procesamiento-facturas" 
+              className="group flex items-center p-6 bg-blue-50 rounded-lg border border-blue-200 hover:bg-blue-100 transition-colors"
+            >
+              <div className="bg-blue-100 group-hover:bg-blue-200 p-4 rounded-full mr-4">
+                <RiFileList3Line className="text-blue-600 text-2xl" />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900">Procesar Facturas</h3>
+                <p className="text-sm text-gray-600 mt-1">
+                  Cargar archivos y generar plantillas BMC
+                </p>
+              </div>
+            </Link>
+            
+            <Link 
+              to="/validacion-terceros" 
+              className="group flex items-center p-6 bg-green-50 rounded-lg border border-green-200 hover:bg-green-100 transition-colors"
+            >
+              <div className="bg-green-100 group-hover:bg-green-200 p-4 rounded-full mr-4">
+                <BsPersonVcardFill className="text-green-600 text-2xl" />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900">Validar Terceros</h3>
+                <p className="text-sm text-gray-600 mt-1">
+                  Gestionar excepciones de validación DIAN
+                </p>
+              </div>
+            </Link>
+          </div>
         </div>
       </div>
     </div>
